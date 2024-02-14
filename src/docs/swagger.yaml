@@ -1,0 +1,41 @@
+definitions:
+  entities.ProductBody:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      price:
+        type: number
+    type: object
+  entities.ProductResponse:
+    properties:
+      message:
+        type: string
+      statusCode:
+        type: integer
+    type: object
+info:
+  contact: {}
+paths:
+  /products/add:
+    post:
+      consumes:
+      - application/json
+      description: Save new product into DynamoDb
+      parameters:
+      - description: Product item to add
+        in: body
+        name: entityBody
+        required: true
+        schema:
+          $ref: '#/definitions/entities.ProductBody'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Successful response
+          schema:
+            $ref: '#/definitions/entities.ProductResponse'
+      summary: Add a Product item
+swagger: "2.0"
