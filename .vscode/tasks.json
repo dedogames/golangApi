@@ -1,0 +1,18 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "goTest",
+        "type": "shell",
+        "command": "go",
+        "args": ["test", "./..."],
+        "group": {
+          "kind": "test",
+          "isDefault": true
+        },
+        "options": {
+            "cwd": "${workspaceFolder}/src/test"  // Set the working directory to the location of your tests
+          }
+      }
+    ]
+  }

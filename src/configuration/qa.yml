@@ -1,0 +1,7 @@
+############ Database ############
+dynamoDb: 
+  region_name: us-east-1
+  product_table: qa-product
+  connection_timeout: 1
+  read_timeout: 1
+  max_attempts: 3
