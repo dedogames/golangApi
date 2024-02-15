@@ -45,6 +45,84 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/products/delete/{id}": {
+            "delete": {
+                "description": "Save new product into DynamoDb",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete a Product item by Id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of the product to find",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Successful response",
+                        "schema": {
+                            "$ref": "#/definitions/entities.ProductResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/products/find/{id}": {
+            "get": {
+                "description": "Select new product into DynamoDb",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Find a Product item",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of the product to find",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "$ref": "#/definitions/entities.ProductResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/products/list": {
+            "get": {
+                "description": "Select all products from DynamoDb",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get all products",
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "$ref": "#/definitions/entities.ProductListResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -59,6 +137,23 @@ const docTemplate = `{
                 },
                 "price": {
                     "type": "number"
+                }
+            }
+        },
+        "entities.ProductListResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entities.ProductBody"
+                    }
+                },
+                "statusCode": {
+                    "type": "integer"
                 }
             }
         },

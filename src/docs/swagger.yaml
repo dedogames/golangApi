@@ -8,6 +8,17 @@ definitions:
       price:
         type: number
     type: object
+  entities.ProductListResponse:
+    properties:
+      message:
+        type: string
+      products:
+        items:
+          $ref: '#/definitions/entities.ProductBody'
+        type: array
+      statusCode:
+        type: integer
+    type: object
   entities.ProductResponse:
     properties:
       message:
@@ -38,4 +49,55 @@ paths:
           schema:
             $ref: '#/definitions/entities.ProductResponse'
       summary: Add a Product item
+  /products/delete/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Save new product into DynamoDb
+      parameters:
+      - description: ID of the product to find
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Successful response
+          schema:
+            $ref: '#/definitions/entities.ProductResponse'
+      summary: Delete a Product item by Id
+  /products/find/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Select new product into DynamoDb
+      parameters:
+      - description: ID of the product to find
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful response
+          schema:
+            $ref: '#/definitions/entities.ProductResponse'
+      summary: Find a Product item
+  /products/list:
+    get:
+      consumes:
+      - application/json
+      description: Select all products from DynamoDb
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful response
+          schema:
+            $ref: '#/definitions/entities.ProductListResponse'
+      summary: Get all products
 swagger: "2.0"

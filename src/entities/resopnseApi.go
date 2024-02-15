@@ -6,7 +6,7 @@ type ProductResponse struct {
 }
 
 type ProductListResponse struct {
-	StatusCode  int           `json:"statusCode"`
-	Message     string        `json:"message"`
-	ProductList []ProductBody `json:"products"`
+	StatusCode  int            `json:"statusCode"`
+	Message     string         `json:"message"`
+	ProductList []*ProductBody `json:"products"`
 }
