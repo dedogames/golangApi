@@ -7,12 +7,24 @@ import (
 	"github.com/crud/docs"
 	"github.com/crud/entities"
 	"github.com/crud/lib"
+	"github.com/crud/service"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-type ManagerProductObj struct {
+type ManagerProduct struct {
+	controlProduct *service.ControlProduct
+}
+
+func (app *ManagerProduct) Init() {
+	app.controlProduct = service.NewControlProduct()
+}
+
+func NewManagerProduct() *ManagerProduct {
+	managerProduct := &ManagerProduct{}
+	managerProduct.Init()
+	return managerProduct
 }
 
 // @Summary Add a Product item
@@ -22,7 +34,7 @@ type ManagerProductObj struct {
 // @Param entityBody body entities.ProductBody true "Product item to add"
 // @Success 201 {object} entities.ProductResponse "Successful response"
 // @Router /products/add [post]
-func (app *ManagerProductObj) routeAdd(c *gin.Context) {
+func (app *ManagerProduct) routeAdd(c *gin.Context) {
 	var productBody = &entities.ProductBody{}
 	if err := c.ShouldBindJSON(productBody); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -30,15 +42,22 @@ func (app *ManagerProductObj) routeAdd(c *gin.Context) {
 	}
 
 	lib.Logger.Info("Received Product: " + productBody.ToString())
-
-	fakeResponse := entities.ProductResponse{
-		Message:    "Product test, not save yet!",
-		StatusCode: http.StatusCreated,
+	fakeResponse := entities.ProductResponse{}
+	err2 := app.controlProduct.SaveProduct(productBody)
+	if err2 != nil {
+		fakeResponse.StatusCode = http.StatusInternalServerError
+		fakeResponse.Message = err2.Error()
+		c.JSON(http.StatusInternalServerError, fakeResponse)
+		return
 	}
+
+	fakeResponse.StatusCode = http.StatusOK
+	fakeResponse.Message = "Product saved with success!"
 	c.JSON(http.StatusOK, fakeResponse)
 }
 
-func (app *ManagerProductObj) Run() {
+func (app *ManagerProduct) Run() {
+
 	r := gin.Default()
 
 	docs.SwaggerInfo.Title = "Manager products"
@@ -56,7 +75,5 @@ func (app *ManagerProductObj) Run() {
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	r.Run(":8003")
+	r.Run(":8001")
 }
-
-var ManagerProduct *ManagerProductObj = &ManagerProductObj{}
